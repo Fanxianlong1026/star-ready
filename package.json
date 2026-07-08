@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Check whether your GitHub repository is ready to earn stars.",
   "type": "module",
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "README.zh-CN.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "LICENSE"
+  ],
   "bin": {
     "star-ready": "./bin/star-ready.js"
   },
@@ -19,6 +28,14 @@
   ],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fanxianlong1026/star-ready.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Fanxianlong1026/star-ready/issues"
+  },
+  "homepage": "https://github.com/Fanxianlong1026/star-ready#readme",
   "engines": {
     "node": ">=18"
   }

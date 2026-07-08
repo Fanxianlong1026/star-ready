@@ -13,6 +13,20 @@ Star-ready 是一个用来检查 GitHub 仓库 README 是否“适合被 star”
 - Badges
 - 贡献说明
 
+## 新增能力
+
+第一轮迭代后，CLI 已经支持：
+
+```bash
+star-ready ./README.md --json
+```
+
+也可以用于 CI 阈值检查：
+
+```bash
+star-ready ./README.md --fail-below 80
+```
+
 ## 推荐仓库介绍
 
 你可以在 GitHub 仓库描述里写：

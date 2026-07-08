@@ -14,20 +14,54 @@ function printHelp() {
 Usage:
   star-ready <github-url-or-readme-path>
   star-ready <github-url-or-readme-path> --report report.md
+  star-ready <github-url-or-readme-path> --json
+  star-ready <github-url-or-readme-path> --fail-below 80
 
 Examples:
   star-ready https://github.com/owner/repo
   star-ready ./README.md
   star-ready https://github.com/owner/repo --report report.md
+  star-ready ./README.md --json
 `);
 }
 
 function parseArgs(inputArgs) {
-  const target = inputArgs[0];
-  const reportIndex = inputArgs.indexOf("--report");
-  const reportPath = reportIndex >= 0 ? inputArgs[reportIndex + 1] : null;
+  let target = null;
+  let reportPath = null;
+  let failBelow = null;
+  let json = false;
 
-  return { target, reportPath };
+  for (let index = 0; index < inputArgs.length; index += 1) {
+    const arg = inputArgs[index];
+
+    if (arg === "--report") {
+      reportPath = inputArgs[index + 1] ?? null;
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--fail-below") {
+      failBelow = Number(inputArgs[index + 1]);
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--json") {
+      json = true;
+      continue;
+    }
+
+    if (!arg.startsWith("-") && !target) {
+      target = arg;
+    }
+  }
+
+  return {
+    target,
+    reportPath,
+    failBelow,
+    json
+  };
 }
 
 function isGitHubUrl(value) {
@@ -48,7 +82,7 @@ async function main() {
     return;
   }
 
-  const { target, reportPath } = parseArgs(args);
+  const { target, reportPath, failBelow, json } = parseArgs(args);
 
   if (!target) {
     printHelp();
@@ -62,15 +96,36 @@ async function main() {
     return;
   }
 
+  if (args.includes("--fail-below") && (!Number.isFinite(failBelow) || failBelow < 0 || failBelow > 100)) {
+    console.error("Missing or invalid score after --fail-below. Use a number from 0 to 100.");
+    process.exitCode = 1;
+    return;
+  }
+
   try {
     const markdown = await loadReadme(target);
     const result = analyzeReadme(markdown);
 
-    console.log(formatTerminalReport(result));
+    if (json) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      console.log(formatTerminalReport(result));
+    }
 
     if (reportPath) {
       await writeFile(resolve(reportPath), formatMarkdownReport(result), "utf8");
-      console.log(`\nReport saved to ${reportPath}`);
+
+      if (!json) {
+        console.log(`\nReport saved to ${reportPath}`);
+      }
+    }
+
+    if (failBelow !== null && result.score < failBelow) {
+      if (!json) {
+        console.error(`\nScore ${result.score} is below required minimum ${failBelow}.`);
+      }
+
+      process.exitCode = 2;
     }
   } catch (error) {
     console.error(`Error: ${error.message}`);

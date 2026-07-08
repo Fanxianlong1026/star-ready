@@ -47,6 +47,8 @@ Star-ready turns those questions into a simple checklist and score.
 - Score a local `README.md`
 - Detect common README signals
 - Print clear terminal reports
+- Print JSON for automation
+- Fail CI when a README score is too low
 - Generate a Markdown report for issues or pull requests
 - Runs with Node.js only, no runtime dependencies
 
@@ -80,6 +82,18 @@ Save a report:
 
 ```bash
 star-ready https://github.com/owner/repo --report report.md
+```
+
+Print JSON:
+
+```bash
+star-ready ./README.md --json
+```
+
+Fail when the score is below a threshold:
+
+```bash
+star-ready ./README.md --fail-below 80
 ```
 
 ## What It Checks
@@ -123,7 +137,6 @@ Suggestions:
 ## Roadmap
 
 - GitHub Action for pull request README checks
-- JSON output for automation
 - README badge generation
 - AI rewrite suggestions
 - Web demo
