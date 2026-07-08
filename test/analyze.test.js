@@ -41,7 +41,10 @@ MIT
   const result = analyzeReadme(markdown);
 
   assert.equal(result.score, 100);
+  assert.equal(result.grade, "A");
+  assert.equal(result.summary, "This README looks ready to share.");
   assert.equal(result.missing.length, 0);
+  assert.deepEqual(result.nextSteps, []);
 });
 
 test("returns actionable missing signals for a sparse README", () => {
@@ -49,7 +52,9 @@ test("returns actionable missing signals for a sparse README", () => {
   const missingIds = result.missing.map((item) => item.id);
 
   assert.equal(result.score, 10);
+  assert.equal(result.grade, "F");
   assert.ok(missingIds.includes("pitch"));
   assert.ok(missingIds.includes("install"));
   assert.ok(missingIds.includes("license"));
+  assert.equal(result.nextSteps.length, 3);
 });

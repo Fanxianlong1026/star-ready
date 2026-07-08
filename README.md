@@ -3,6 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-339933.svg)](package.json)
 
+[中文说明](README.zh-CN.md)
+
 Check whether your GitHub repository is ready to earn stars.
 
 Star-ready is a tiny CLI that reviews a repository README and gives it a practical score based on the signals people look for before starring an open-source project: a clear pitch, quick start, examples, screenshots, license, badges, and contribution hints.
@@ -12,7 +14,8 @@ npx star-ready https://github.com/owner/repo
 ```
 
 ```text
-Star-ready score: 76 / 100
+Star-ready score: 76 / 100 (B)
+This README is solid, with a few high-impact gaps left.
 
 Strong signals:
 - Clear project title
@@ -26,6 +29,11 @@ Missing signals:
 
 Suggestions:
 - Add one screenshot, GIF, or demo link near the top.
+- Add a 3-step quick start before advanced configuration.
+- Include a license so people know how they can use the project.
+
+Next steps:
+- Add one screenshot, GIF, or hosted demo link near the top.
 - Add a 3-step quick start before advanced configuration.
 - Include a license so people know how they can use the project.
 ```
@@ -50,6 +58,7 @@ Star-ready turns those questions into a simple checklist and score.
 - Print JSON for automation
 - Fail CI when a README score is too low
 - Generate a Markdown report for issues or pull requests
+- Generate a starter README template
 - Runs with Node.js only, no runtime dependencies
 
 ## Install
@@ -96,27 +105,34 @@ Fail when the score is below a threshold:
 star-ready ./README.md --fail-below 80
 ```
 
+Create a starter README template:
+
+```bash
+star-ready --init-template README.md --name "My Project"
+```
+
 ## What It Checks
 
 Star-ready looks for practical signals that help a repository feel useful and trustworthy:
 
-| Signal | Why it matters |
-| --- | --- |
-| Clear title | Visitors need to know where they are |
-| One-line pitch | The project value should be obvious fast |
-| Installation | People need a path to try it |
-| Quick start | A short success path increases adoption |
-| Usage example | Examples make the tool feel real |
-| Screenshot or demo | Visual proof makes sharing easier |
-| License | People need permission clarity |
-| Badges | Status signals help with trust |
-| Contributing | Contributors need an entry point |
-| Links | Homepage, docs, or demos reduce friction |
+| Category | Signal | Why it matters |
+| --- | --- | --- |
+| Positioning | Clear title | Visitors need to know where they are |
+| Positioning | One-line pitch | The project value should be obvious fast |
+| Adoption | Installation | People need a path to try it |
+| Adoption | Quick start | A short success path increases adoption |
+| Adoption | Usage example | Examples make the tool feel real |
+| Trust | Screenshot or demo | Visual proof makes sharing easier |
+| Trust | License | People need permission clarity |
+| Trust | Badges | Status signals help with trust |
+| Community | Contributing | Contributors need an entry point |
+| Community | Links | Homepage, docs, or demos reduce friction |
 
 ## Example Report
 
 ```text
-Star-ready score: 68 / 100
+Star-ready score: 68 / 100 (C)
+This README has the basics, but visitors may still hesitate.
 
 Strong signals:
 - README has a clear title
@@ -129,6 +145,11 @@ Missing signals:
 - No contribution section found
 
 Suggestions:
+- Put a one-sentence value proposition directly under the title.
+- Add a screenshot, GIF, or hosted demo link.
+- Add a LICENSE file and mention it in the README.
+
+Next steps:
 - Put a one-sentence value proposition directly under the title.
 - Add a screenshot, GIF, or hosted demo link.
 - Add a LICENSE file and mention it in the README.

@@ -1,79 +1,143 @@
-# Star-ready 中文说明
+# Star-ready
 
-Star-ready 是一个用来检查 GitHub 仓库 README 是否“适合被 star”的小工具。
+[English](README.md)
 
-它会分析 README 里有没有这些关键信号：
+检查你的 GitHub 仓库 README 是否已经准备好获得更多 star。
 
-- 项目一句话介绍
-- 安装步骤
-- 快速开始
-- 使用示例
-- 截图、GIF 或 demo
-- License
-- Badges
-- 贡献说明
+Star-ready 是一个轻量级命令行工具。它会分析 README 中是否包含开源项目常见的关键信号，例如项目介绍、安装步骤、快速开始、示例、截图、许可证、徽章和贡献说明，并输出分数、等级和可执行的改进建议。
 
-## 新增能力
+## 适合谁
 
-第一轮迭代后，CLI 已经支持：
+- 正在发布开源项目的开发者
+- 想让仓库主页更清晰的维护者
+- 需要在 PR 或 CI 中检查 README 质量的团队
+- 想学习优秀 README 结构的新手
+
+## 功能
+
+- 检查 GitHub 仓库链接
+- 检查本地 `README.md`
+- 输出终端报告
+- 输出 JSON，方便自动化处理
+- 生成 Markdown 报告
+- 设置最低分数阈值，低于阈值时让 CI 失败
+- 生成一个可直接修改的 README 模板
+
+## 安装
+
+```bash
+npm install -g star-ready
+```
+
+也可以直接使用：
+
+```bash
+npx star-ready https://github.com/owner/repo
+```
+
+## 使用方法
+
+检查 GitHub 仓库：
+
+```bash
+star-ready https://github.com/owner/repo
+```
+
+检查本地 README：
+
+```bash
+star-ready ./README.md
+```
+
+生成 Markdown 报告：
+
+```bash
+star-ready ./README.md --report report.md
+```
+
+输出 JSON：
 
 ```bash
 star-ready ./README.md --json
 ```
 
-也可以用于 CI 阈值检查：
+设置最低分数，适合 CI：
 
 ```bash
 star-ready ./README.md --fail-below 80
 ```
 
-## 推荐仓库介绍
+生成 README 模板：
 
-你可以在 GitHub 仓库描述里写：
-
-```text
-Check whether your GitHub repo is ready to earn stars.
+```bash
+star-ready --init-template README.md --name "My Project"
 ```
 
-中文宣传可以写：
+## 检查内容
+
+| 检查项 | 作用 |
+| --- | --- |
+| 项目标题 | 让访问者立刻知道项目名称 |
+| 一句话介绍 | 快速说明项目价值 |
+| 安装步骤 | 降低尝试成本 |
+| 快速开始 | 给用户一条最短成功路径 |
+| 使用示例 | 让工具的实际效果更具体 |
+| 截图或 demo | 提供直观证明 |
+| License | 明确别人是否可以使用 |
+| Badges | 展示版本、测试、许可证等状态 |
+| 贡献说明 | 让潜在贡献者知道如何参与 |
+| 有用链接 | 连接文档、主页、示例或相关资源 |
+
+## 输出示例
 
 ```text
-一个自动检查 GitHub 项目 README 是否容易获得 star 的 CLI 工具。
+Star-ready score: 86 / 100 (B)
+This README is solid, with a few high-impact gaps left.
+
+Strong signals:
+- Clear project title
+- Installation instructions
+- Usage example
+
+Missing signals:
+- Screenshot, GIF, or demo link
+
+Suggestions:
+- Add one screenshot, GIF, or hosted demo link near the top.
+
+Next steps:
+- Add one screenshot, GIF, or hosted demo link near the top.
 ```
 
-## 第一版上传哪些文件
+## 在 GitHub Actions 中使用
 
-建议先上传这些文件：
+```yaml
+name: README check
 
-```text
-star-ready/
-  README.md
-  README.zh-CN.md
-  package.json
-  LICENSE
-  .gitignore
-  bin/
-    star-ready.js
-  src/
-    analyze.js
-    fetch-readme.js
-    format-report.js
-  examples/
-    report.md
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node ./bin/star-ready.js ./README.md --fail-below 80
 ```
 
-## 发到社区时的标题
+## 为什么需要它
 
-可以用这些标题：
+很多项目不是因为代码差而被忽略，而是因为访问者在前几十秒内看不懂它的价值。Star-ready 把这些容易被忽略的 README 信号变成清晰的检查结果，帮助你更快发现“别人为什么没有继续看下去”。
 
-- I built a CLI that checks if your GitHub repo is ready to earn stars
-- Star-ready: a README checklist for open-source projects
-- 我做了一个检查 GitHub README 是否容易被 star 的小工具
+## 贡献
 
-## 后续可以扩展
+欢迎提交 issue 和 pull request。新的检查项应该尽量简单、可解释，并且给出明确的改进建议。
 
-- 做成 GitHub Action
-- 做成网页 demo
-- 输出 JSON 报告
-- 生成 README 徽章
-- 接入 AI，自动改写 README 开头
+## License
+
+MIT

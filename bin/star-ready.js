@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 import { analyzeReadme } from "../src/analyze.js";
 import { fetchReadmeFromGitHub } from "../src/fetch-readme.js";
 import { formatMarkdownReport, formatTerminalReport } from "../src/format-report.js";
+import { createReadmeTemplate } from "../src/template.js";
 
 const args = process.argv.slice(2);
 
@@ -16,12 +17,14 @@ Usage:
   star-ready <github-url-or-readme-path> --report report.md
   star-ready <github-url-or-readme-path> --json
   star-ready <github-url-or-readme-path> --fail-below 80
+  star-ready --init-template README.md --name "My Project"
 
 Examples:
   star-ready https://github.com/owner/repo
   star-ready ./README.md
   star-ready https://github.com/owner/repo --report report.md
   star-ready ./README.md --json
+  star-ready --init-template README.md --name "My Project"
 `);
 }
 
@@ -30,6 +33,8 @@ function parseArgs(inputArgs) {
   let reportPath = null;
   let failBelow = null;
   let json = false;
+  let templatePath = null;
+  let name = "Your Project";
 
   for (let index = 0; index < inputArgs.length; index += 1) {
     const arg = inputArgs[index];
@@ -51,6 +56,23 @@ function parseArgs(inputArgs) {
       continue;
     }
 
+    if (arg === "--init-template") {
+      const nextArg = inputArgs[index + 1];
+      templatePath = nextArg && !nextArg.startsWith("-") ? nextArg : "README.md";
+
+      if (templatePath === nextArg) {
+        index += 1;
+      }
+
+      continue;
+    }
+
+    if (arg === "--name") {
+      name = inputArgs[index + 1] ?? name;
+      index += 1;
+      continue;
+    }
+
     if (!arg.startsWith("-") && !target) {
       target = arg;
     }
@@ -60,7 +82,9 @@ function parseArgs(inputArgs) {
     target,
     reportPath,
     failBelow,
-    json
+    json,
+    templatePath,
+    name
   };
 }
 
@@ -82,7 +106,19 @@ async function main() {
     return;
   }
 
-  const { target, reportPath, failBelow, json } = parseArgs(args);
+  const { target, reportPath, failBelow, json, templatePath, name } = parseArgs(args);
+
+  if (templatePath) {
+    try {
+      await writeFile(resolve(templatePath), createReadmeTemplate(name), "utf8");
+      console.log(`README template saved to ${templatePath}`);
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      process.exitCode = 1;
+    }
+
+    return;
+  }
 
   if (!target) {
     printHelp();
