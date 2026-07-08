@@ -1,0 +1,25 @@
+{
+  "name": "star-ready",
+  "version": "0.1.0",
+  "description": "Check whether your GitHub repository is ready to earn stars.",
+  "type": "module",
+  "bin": {
+    "star-ready": "./bin/star-ready.js"
+  },
+  "scripts": {
+    "start": "node ./bin/star-ready.js ./README.md",
+    "test": "node --test"
+  },
+  "keywords": [
+    "github",
+    "readme",
+    "open-source",
+    "cli",
+    "stars"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
